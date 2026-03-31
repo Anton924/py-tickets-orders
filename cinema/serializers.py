@@ -70,9 +70,6 @@ class MovieSessionListSerializer(MovieSessionSerializer):
     cinema_hall_capacity = serializers.IntegerField(
         source="cinema_hall.capacity", read_only=True
     )
-    tickets_available = serializers.IntegerField(
-        read_only=True
-    )
 
     class Meta:
         model = MovieSession
@@ -82,6 +79,19 @@ class MovieSessionListSerializer(MovieSessionSerializer):
             "movie_title",
             "cinema_hall_name",
             "cinema_hall_capacity",
+        )
+
+
+class MovieSessionWithTakenSeatsSerializer(
+    MovieSessionListSerializer
+):
+    tickets_available = serializers.IntegerField(
+        read_only=True
+    )
+
+    class Meta:
+        model = MovieSession
+        fields = MovieSessionListSerializer.Meta.fields + (
             "tickets_available",
         )
 
@@ -145,6 +155,7 @@ class TicketCreateSerializer(TicketSerializer):
             attrs["movie_session"],
             serializers.ValidationError
         )
+        return attrs
 
 
 class OrderSerializer(serializers.ModelSerializer):
