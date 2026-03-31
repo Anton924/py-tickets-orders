@@ -2,7 +2,6 @@ import datetime
 
 from django.db.models import F, Count
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
 
 from cinema.models import (
     Genre,
@@ -130,7 +129,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         if self.action == "list":
-            queryset.prefetch_related(
+            queryset = queryset.prefetch_related(
                 "tickets__movie_session__movie",
                 "tickets__movie_session__cinema_hall"
             )
